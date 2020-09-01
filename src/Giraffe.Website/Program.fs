@@ -155,6 +155,7 @@ module Views =
                         ul [ _id "nav-links" ] [
                             li [] [ internalLink "/" "Home" ]
                             li [] [ internalLink "/docs" "Documentation" ]
+                            li [] [ internalLink "/view-engine" "View Engine" ]
                             li [] [ externalLink "https://github.com/giraffe-fsharp/giraffe" "GitHub"]
                             li [] [ externalLink "https://github.com/giraffe-fsharp/Giraffe/releases" "Releases" ]
                         ]
@@ -240,12 +241,28 @@ module WebApp =
             }
 
     let private indexHandler =
+        allowCaching (TimeSpan.FromDays(1.0)) >=>
         markdownHandler
             "https://raw.githubusercontent.com/giraffe-fsharp/Giraffe/master/README.md"
+            "Home"
+            (Url.create "/")
+            4
 
     let private docsHandler =
+        allowCaching (TimeSpan.FromDays(1.0)) >=>
         markdownHandler
             "https://raw.githubusercontent.com/giraffe-fsharp/Giraffe/master/DOCUMENTATION.md"
+            "Documentation"
+            (Url.create "/docs")
+            0
+
+    let private viewEngineHandler =
+        allowCaching (TimeSpan.FromDays(1.0)) >=>
+        markdownHandler
+            "https://raw.githubusercontent.com/giraffe-fsharp/Giraffe.ViewEngine/master/README.md"
+            "View Engine"
+            (Url.create "/view-engine")
+            2
 
     let private pingPongHandler : HttpHandler =
         noResponseCaching >=> text "pong"
@@ -257,8 +274,9 @@ module WebApp =
     let endpoints =
         [
             GET => routef "/bundle.%s.css" (fun _ -> cssHandler)
-            GET => route "/"         (allowCaching (TimeSpan.FromDays(1.0)) >=> indexHandler "Home" (Url.create "/") 4)
-            GET => route "/docs"     (allowCaching (TimeSpan.FromDays(1.0)) >=> docsHandler "Documentation" (Url.create "/docs") 0)
+            GET => route "/"         indexHandler
+            GET => route "/docs"     docsHandler
+            GET => route "/view-engine"     viewEngineHandler
             GET => route "/ping"     pingPongHandler
             GET => route "/version"  versionHandler
         ]
