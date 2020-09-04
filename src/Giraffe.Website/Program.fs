@@ -156,7 +156,7 @@ module Views =
                             li [] [ internalLink "/" "Home" ]
                             li [] [ internalLink "/docs" "Documentation" ]
                             li [] [ internalLink "/view-engine" "View Engine" ]
-                            li [] [ externalLink "https://github.com/giraffe-fsharp/giraffe" "GitHub"]
+                            li [] [ externalLink "https://github.com/giraffe-fsharp" "GitHub"]
                             li [] [ externalLink "https://github.com/giraffe-fsharp/Giraffe/releases" "Releases" ]
                         ]
                     ]
@@ -188,6 +188,7 @@ module MarkDog =
     let private pipeline =
         MarkdownPipelineBuilder()
             .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
+            .UsePipeTables()
             .Build()
 
     let toHtml (value : string) =
@@ -222,13 +223,17 @@ module WebApp =
         (markdownUrl   : string)
         (title         : string)
         (permalink     : string)
-        (lineStart     : int) : HttpHandler =
+        (lineStart     : int)
+        (linkReplacements : Map<string, string>) : HttpHandler =
         fun next ctx ->
             task {
                 let client = new HttpClient()
                 let! allContent = client.GetStringAsync(markdownUrl)
                 let content =
-                    allContent.Split([| Environment.NewLine |], StringSplitOptions.None)
+                    linkReplacements
+                    |> (Map.fold(fun (c : string) key sub -> c.Replace(key, sub)) allContent)
+                    |> fun c -> c.Replace(markdownUrl, permalink)
+                    |> fun c -> c.Split([| Environment.NewLine |], StringSplitOptions.None)
                     |> Array.skip lineStart
                     |> String.concat Environment.NewLine
                 let response =
@@ -240,6 +245,13 @@ module WebApp =
                 return! response next ctx
             }
 
+    let linkReplacements =
+        [
+            "https://github.com/giraffe-fsharp/Giraffe/blob/master/README.md", (Url.create "/")
+            "https://github.com/giraffe-fsharp/Giraffe/blob/master/DOCUMENTATION.md", (Url.create "/docs")
+            "https://github.com/giraffe-fsharp/Giraffe.ViewEngine/blob/master/README.md", (Url.create "/view-engine")
+        ] |> Map.ofList
+
     let private indexHandler =
         allowCaching (TimeSpan.FromDays(1.0)) >=>
         markdownHandler
@@ -247,6 +259,7 @@ module WebApp =
             "Home"
             (Url.create "/")
             4
+            linkReplacements
 
     let private docsHandler =
         allowCaching (TimeSpan.FromDays(1.0)) >=>
@@ -255,6 +268,7 @@ module WebApp =
             "Documentation"
             (Url.create "/docs")
             0
+            linkReplacements
 
     let private viewEngineHandler =
         allowCaching (TimeSpan.FromDays(1.0)) >=>
@@ -263,6 +277,7 @@ module WebApp =
             "View Engine"
             (Url.create "/view-engine")
             2
+            linkReplacements
 
     let private pingPongHandler : HttpHandler =
         noResponseCaching >=> text "pong"
