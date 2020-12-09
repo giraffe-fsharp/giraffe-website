@@ -22,3 +22,39 @@ jobs:
         run: dotnet restore src/Giraffe.Website/Giraffe.Website.fsproj
       - name: Build
         run: dotnet build --configuration Release --no-restore src/Giraffe.Website/Giraffe.Website.fsproj
+
+  deploy:
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    env:
+      PROJECT: giraffefsharp
+      IMAGE: giraffe-website
+
+    steps:
+      # Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # Build the Docker image
+      - name: Build
+        run: |
+          PATTERN="refs/tags/v"
+          SUB=""
+          TAG="${GITHUB_REF/$PATTERN/$SUB}"
+          docker build -t "$PROJECT"/"$IMAGE":"$TAG" -f src/Giraffe.Website/Dockerfile .
+
+      # Auth with Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      # Push the Docker image to Docker Hub
+      - name: Publish
+        run: |
+          PATTERN="refs/tags/v"
+          SUB=""
+          TAG="${GITHUB_REF/$PATTERN/$SUB}"
+          docker push $PROJECT/$IMAGE:$TAG
