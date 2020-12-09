@@ -25,16 +25,6 @@ module Env =
     let userHomeDir = Environment.GetEnvironmentVariable "HOME"
     let defaultAppName = "Giraffe"
 
-    let devConfig =
-        (userHomeDir, defaultAppName.ToLower())
-        ||> sprintf "%s/Dusted/app-secrets/%s.json"
-        |> DevConfig.load
-
-    let getDevVar key =
-        match devConfig.ContainsKey key with
-        | true  -> devConfig.[key]
-        | false -> ""
-
     let appRoot = Directory.GetCurrentDirectory()
     let publicAssetsDir = Path.Combine(appRoot, "Assets/Public")
 
@@ -69,7 +59,7 @@ module Env =
     let sentryDsn =
         Config.environmentVarOrDefault
             Keys.SENTRY_DSN
-            (getDevVar Keys.SENTRY_DSN)
+            ""
         |> Str.toOption
 
     let domainName =
@@ -85,12 +75,12 @@ module Env =
     let googleAnalyticsKey =
         Config.environmentVarOrDefault
             Keys.GOOGLE_ANALYTICS_KEY
-            (getDevVar Keys.GOOGLE_ANALYTICS_KEY)
+            ""
 
     let googleAnalyticsViewId =
         Config.environmentVarOrDefault
             Keys.GOOGLE_ANALYTICS_VIEWID
-            (getDevVar Keys.GOOGLE_ANALYTICS_VIEWID)
+            ""
 
     let enableRequestLogging =
         Config.InvariantCulture.typedEnvironmentVarOrDefault<bool>
@@ -98,14 +88,9 @@ module Env =
             false
 
     let enableErrorEndpoint =
-        let dv =
-            getDevVar Keys.ENABLE_ERROR_ENDPOINT
-            |> Str.toOption
-            |> Option.defaultValue "false"
-            |> bool.Parse
         Config.InvariantCulture.typedEnvironmentVarOrDefault<bool>
             Keys.ENABLE_ERROR_ENDPOINT
-            dv
+            false
 
     let proxyCount =
         Config.InvariantCulture.typedEnvironmentVarOrDefault<int>

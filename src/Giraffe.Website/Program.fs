@@ -139,7 +139,7 @@ module Views =
                 css (Url.create minifiedCss.Path)
 
                 // Google Analytics
-//                if Env.isProduction then googleAnalytics
+                //if Env.isProduction then googleAnalytics
 
                 // Additional (optional) header content
                 if headerContent.IsSome then yield! headerContent.Value
@@ -204,7 +204,7 @@ module WebApp =
     open System.Net.Http
     open Microsoft.Extensions.Logging
     open Microsoft.Net.Http.Headers
-    open FSharp.Control.Tasks.V2.ContextInsensitive
+    open FSharp.Control.Tasks
     open Giraffe
     open Giraffe.EndpointRouting
     open Giraffe.ViewEngine
@@ -288,19 +288,20 @@ module WebApp =
 
     let endpoints =
         [
-            GET => routef "/bundle.%s.css" (fun _ -> cssHandler)
-            GET => route "/"         indexHandler
-            GET => route "/docs"     docsHandler
-            GET => route "/view-engine"     viewEngineHandler
-            GET => route "/ping"     pingPongHandler
-            GET => route "/version"  versionHandler
+            GET_HEAD [
+                routef "/bundle.%s.css" (fun _ -> cssHandler)
+                route "/"            indexHandler
+                route "/docs"        docsHandler
+                route "/view-engine" viewEngineHandler
+                route "/ping"        pingPongHandler
+                route "/version"     versionHandler
+            ]
         ]
 
-    let notFoundMiddleware =
+    let notFound =
         "Not Found"
         |> text
         |> RequestErrors.notFound
-        |> GiraffeMiddleware.create
 
     let errorHandler (ex : Exception) (logger : ILogger) =
         logger.LogError(ex, "An unhandled exception has occurred while executing the request.")
@@ -373,8 +374,8 @@ module Main =
             .UseResponseCaching()
             .UseResponseCompression()
             .UseRouting()
-            .UseEndpoints(fun e -> e.MapGiraffeEndpoints(WebApp.endpoints))
-            .Use(WebApp.notFoundMiddleware)
+            .UseGiraffe(WebApp.endpoints)
+            .UseGiraffe(WebApp.notFound)
         |> ignore
 
     let configureServices (services : IServiceCollection) =
