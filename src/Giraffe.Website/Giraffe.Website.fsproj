@@ -17,14 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="DotEnv.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Env.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\**\*;Dockerfile">
+    <Content Include="Assets\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

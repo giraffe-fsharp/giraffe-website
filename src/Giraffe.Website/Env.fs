@@ -14,8 +14,7 @@ module Env =
         let LOG_LEVEL = "LOG_LEVEL"
         let SENTRY_DSN = "SENTRY_DSN"
         let DOMAIN_NAME = "DOMAIN_NAME"
-        let GOOGLE_ANALYTICS_KEY = "GOOGLE_ANALYTICS_KEY"
-        let GOOGLE_ANALYTICS_VIEWID = "GOOGLE_ANALYTICS_VIEWID"
+        let FORCE_HTTPS = "FORCE_HTTPS"
         let ENABLE_REQUEST_LOGGING = "ENABLE_REQUEST_LOGGING"
         let ENABLE_ERROR_ENDPOINT = "ENABLE_ERROR_ENDPOINT"
         let PROXY_COUNT = "PROXY_COUNT"
@@ -67,20 +66,16 @@ module Env =
             Keys.DOMAIN_NAME
             "giraffe.wiki"
 
+    let forceHttps =
+        Config.typedEnvironmentVarOrDefault
+            None
+            Keys.FORCE_HTTPS
+            false
+
     let baseUrl =
         match isProduction with
         | true  -> sprintf "https://%s" domainName
         | false -> "http://localhost:5000"
-
-    let googleAnalyticsKey =
-        Config.environmentVarOrDefault
-            Keys.GOOGLE_ANALYTICS_KEY
-            ""
-
-    let googleAnalyticsViewId =
-        Config.environmentVarOrDefault
-            Keys.GOOGLE_ANALYTICS_VIEWID
-            ""
 
     let enableRequestLogging =
         Config.InvariantCulture.typedEnvironmentVarOrDefault<bool>
@@ -126,13 +121,12 @@ module Env =
                 "Log Level", logLevel
                 "Sentry DSN", sentryDsn.ToSecret()
             ]
+            "Redirection", dict [
+                "Force HTTPS", forceHttps.ToString()
+            ]
             "URLs", dict [
                 "Domain", domainName
                 "Base URL", baseUrl
-            ]
-            "Analytics", dict [
-                "Google Analytics key", googleAnalyticsKey.ToSecret()
-                "Google Analytics viewID", googleAnalyticsViewId
             ]
             "Proxies", dict [
                 "Proxy count", proxyCount.ToString()
