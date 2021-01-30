@@ -128,11 +128,11 @@ nav ul li {
 }
 
 nav a {
-    font-size: .8em;
+    font-size: .9em;
     padding-bottom: 3px;
-    border-bottom: 3px solid #fcc72b;
     text-transform: uppercase;
     color: #825e34 !important;
+    font-weight: 500;
 }
 
 nav a:hover {

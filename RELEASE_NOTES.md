@@ -1,6 +1,10 @@
 Release Notes
 =============
 
+## 1.5.0
+
+CSS changes.
+
 ## 1.4.0
 
 - Fixed versioning
