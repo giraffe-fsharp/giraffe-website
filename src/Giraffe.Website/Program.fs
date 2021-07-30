@@ -136,6 +136,10 @@ module Views =
                     openGraph "image:width"  "1094"
                     openGraph "image:height" "729"
 
+                // Google Fonts
+                link [ _rel "preconnect"; _href "https://fonts.gstatic.com" ]
+                link [ _href "https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"; _rel "stylesheet" ]
+
                 // Minified & bundled CSS
                 css (Url.create minifiedCss.Path)
 

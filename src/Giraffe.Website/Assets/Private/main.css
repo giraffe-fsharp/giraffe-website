@@ -1,5 +1,5 @@
 body {
-    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-family: Inter, Helvetica Neue, Helvetica, Arial, sans-serif;
     color: #333;
     -ms-word-wrap: break-word;
     word-wrap: break-word;
@@ -8,7 +8,7 @@ body {
 
 header, main, nav, footer {
     margin: 0 auto;
-    max-width: 800px;
+    max-width: 900px;
     padding: 10px;
 }
 
@@ -112,8 +112,9 @@ ul li a {
 nav {
     display: flex;
     justify-content: space-around;
-    padding: 0;
+    padding: 0 0 1em 0;
     text-align: center;
+    border-bottom: 1px solid #f1f1f1;
 }
 
 nav ul {
@@ -131,7 +132,7 @@ nav a {
     font-size: .9em;
     padding-bottom: 3px;
     text-transform: uppercase;
-    color: #825e34 !important;
+    color: #825e34cc !important;
     font-weight: 500;
 }
 
