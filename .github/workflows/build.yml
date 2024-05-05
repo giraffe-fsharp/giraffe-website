@@ -17,7 +17,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 5.x
+          dotnet-version: 8.x
       - name: Restore
         run: dotnet restore src/Giraffe.Website/Giraffe.Website.fsproj
       - name: Build
