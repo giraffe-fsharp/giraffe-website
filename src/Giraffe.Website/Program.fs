@@ -252,15 +252,15 @@ module WebApp =
 
     let linkReplacements =
         [
-            "https://github.com/giraffe-fsharp/Giraffe/blob/master/README.md", (Url.create "/")
-            "https://github.com/giraffe-fsharp/Giraffe/blob/master/DOCUMENTATION.md", (Url.create "/docs")
+            "https://github.com/giraffe-fsharp/Giraffe/blob/main/README.md", (Url.create "/")
+            "https://github.com/giraffe-fsharp/Giraffe/blob/main/DOCUMENTATION.md", (Url.create "/docs")
             "https://github.com/giraffe-fsharp/Giraffe.ViewEngine/blob/master/README.md", (Url.create "/view-engine")
         ] |> Map.ofList
 
     let private indexHandler =
         allowCaching (TimeSpan.FromDays(1.0)) >=>
         markdownHandler
-            "https://raw.githubusercontent.com/giraffe-fsharp/Giraffe/master/README.md"
+            "https://raw.githubusercontent.com/giraffe-fsharp/Giraffe/main/README.md"
             "Home"
             (Url.create "/")
             4
@@ -269,7 +269,7 @@ module WebApp =
     let private docsHandler =
         allowCaching (TimeSpan.FromDays(1.0)) >=>
         markdownHandler
-            "https://raw.githubusercontent.com/giraffe-fsharp/Giraffe/master/DOCUMENTATION.md"
+            "https://raw.githubusercontent.com/giraffe-fsharp/Giraffe/main/DOCUMENTATION.md"
             "Documentation"
             (Url.create "/docs")
             0
