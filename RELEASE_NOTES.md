@@ -1,6 +1,12 @@
 Release Notes
 =============
 
+## 1.6.0
+
+- Replace `master` branch by `main` for Giraffe documentation
+- CI version updates
+- Update project to .NET 8 (F# code and Dockerfile)
+
 ## 1.5.0
 
 CSS changes.
