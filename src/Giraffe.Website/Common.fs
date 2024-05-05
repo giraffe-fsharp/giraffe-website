@@ -216,7 +216,7 @@ module NetworkExtensions =
     type IApplicationBuilder with
         member this.UseTrailingSlashRedirection() =
             this.Use(
-                fun ctx next ->
+                fun (ctx: HttpContext) (next: RequestDelegate) ->
                     let hasTrailingSlash =
                         ctx.Request.Path.HasValue
                         && ctx.Request.Path.Value.EndsWith "/"
@@ -229,13 +229,13 @@ module NetworkExtensions =
                         let url = Microsoft.AspNetCore.Http.Extensions.UriHelper.GetEncodedUrl ctx.Request
                         ctx.Response.Redirect(url, true)
                         Threading.Tasks.Task.CompletedTask
-                    | false -> next.Invoke())
+                    | false -> next.Invoke(ctx))
 
         member this.UseHttpsRedirection (isEnabled : bool, domainName : string) =
             match isEnabled with
             | true ->
                 this.Use(
-                    fun ctx next ->
+                    fun (ctx: HttpContext) (next: RequestDelegate) ->
                         let host = ctx.Request.Host.Host
                         // Only HTTPS redirect for the chosen domain:
                         let mustUseHttps =
@@ -246,7 +246,7 @@ module NetworkExtensions =
                         if not mustUseHttps then
                             ctx.Request.Scheme  <- "https"
                             ctx.Request.IsHttps <- true
-                        next.Invoke())
+                        next.Invoke(ctx))
                     .UseHttpsRedirection()
             | false -> this
 

@@ -209,7 +209,6 @@ module WebApp =
     open System.Net.Http
     open Microsoft.Extensions.Logging
     open Microsoft.Net.Http.Headers
-    open FSharp.Control.Tasks
     open Giraffe
     open Giraffe.EndpointRouting
     open Giraffe.ViewEngine
