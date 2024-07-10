@@ -4,6 +4,7 @@ body {
     -ms-word-wrap: break-word;
     word-wrap: break-word;
     font-size: 1.1em;
+    font-variant-ligatures: none;
 }
 
 header, main, nav, footer {
