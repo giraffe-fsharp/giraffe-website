@@ -11,6 +11,10 @@ RUN dotnet publish /p:Version=$version Giraffe.Website/Giraffe.Website.fsproj -c
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS runtime
 
+# This was a breaking change on .NET 8
+# https://learn.microsoft.com/en-us/dotnet/core/compatibility/containers/8.0/aspnet-port
+ENV ASPNETCORE_HTTP_PORTS=80
+
 WORKDIR /app
 COPY --from=build /app/published .
 ENTRYPOINT ["dotnet", "Giraffe.Website.dll"]
