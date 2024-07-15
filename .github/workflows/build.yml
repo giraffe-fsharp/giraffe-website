@@ -13,11 +13,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 5.0.100
+          dotnet-version: 5.x
       - name: Restore
         run: dotnet restore src/Giraffe.Website/Giraffe.Website.fsproj
       - name: Build
@@ -34,7 +34,7 @@ jobs:
     steps:
       # Checkout repo
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Build the Docker image
       - name: Build Docker image
@@ -46,7 +46,7 @@ jobs:
 
       # Auth with Docker Hub
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
