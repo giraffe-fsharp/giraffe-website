@@ -1,11 +1,15 @@
 Release Notes
 =============
 
-## 1.6.0
+## 2.0.0
 
 - [Minor CSS change](https://github.com/giraffe-fsharp/giraffe-website/pull/3) - Credits @m-rinaldi
 - [(CI) GitHub actions version update](https://github.com/giraffe-fsharp/giraffe-website/pull/5) - Credits @64J0
 - [Update to .NET 8](https://github.com/giraffe-fsharp/giraffe-website/pull/2) - Credits @64J0
+
+## 1.6.0
+
+Unkown.
 
 ## 1.5.0
 
