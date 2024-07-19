@@ -3,9 +3,9 @@ Release Notes
 
 ## 1.6.0
 
-- Replace `master` branch by `main` for Giraffe documentation
-- CI version updates
-- Update project to .NET 8 (F# code and Dockerfile)
+- [Minor CSS change](https://github.com/giraffe-fsharp/giraffe-website/pull/3) - Credits @m-rinaldi
+- [(CI) GitHub actions version update](https://github.com/giraffe-fsharp/giraffe-website/pull/5) - Credits @64J0
+- [Update to .NET 8](https://github.com/giraffe-fsharp/giraffe-website/pull/2) - Credits @64J0
 
 ## 1.5.0
 
